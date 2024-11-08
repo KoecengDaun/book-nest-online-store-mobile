@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:book_nest_online_store/widgets/left_drawer.dart';
 
 class MenuPage extends StatelessWidget {
   const MenuPage({super.key});
@@ -9,47 +9,74 @@ class MenuPage extends StatelessWidget {
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          content: Text(message),
+          content: Row(
+            children: [
+              const Icon(
+                Icons.info_outline,
+                color: Colors.white,
+                size: 24,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  message,
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ),
+            ],
+          ),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(12),
           ),
-          backgroundColor: Colors.black87,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           duration: const Duration(seconds: 2),
+          elevation: 4,
+          margin: const EdgeInsets.all(12),
         ),
       );
   }
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    final secondaryColor = Theme.of(context).colorScheme.secondary;
+
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Book Nest Online Store'),
+        backgroundColor: primaryColor,
+        iconTheme: const IconThemeData(color: Colors.white),
+        elevation: 0,
+      ),
+      drawer: const LeftDrawer(),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              Theme.of(context).colorScheme.primary.withOpacity(0.8),
-              Theme.of(context).colorScheme.secondary.withOpacity(0.6),
+              primaryColor.withOpacity(0.9),
+              secondaryColor.withOpacity(0.7),
             ],
           ),
         ),
         child: SafeArea(
           child: Column(
             children: [
-              _buildHeader(),
+              _buildHeader(primaryColor, secondaryColor),
               Expanded(
                 child: Container(
-                  margin: const EdgeInsets.all(16),
-                  padding: const EdgeInsets.all(20),
+                  margin: const EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.9),
-                    borderRadius: BorderRadius.circular(20),
+                    color: Colors.white.withOpacity(0.95),
+                    borderRadius: BorderRadius.circular(24),
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withOpacity(0.1),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
+                        blurRadius: 12,
+                        offset: const Offset(0, 8),
                       ),
                     ],
                   ),
@@ -63,7 +90,7 @@ class MenuPage extends StatelessWidget {
                         const Color(0xFFFF5252),
                         "Kamu telah menekan tombol Lihat Daftar Produk",
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 24),
                       _buildMenuButton(
                         context,
                         "Tambah Produk",
@@ -71,7 +98,7 @@ class MenuPage extends StatelessWidget {
                         const Color(0xFF4CAF50),
                         "Kamu telah menekan tombol Tambah Produk",
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 24),
                       _buildMenuButton(
                         context,
                         "Logout",
@@ -90,43 +117,46 @@ class MenuPage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(Color primaryColor, Color secondaryColor) {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(24),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.9),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(16),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.shopping_cart_rounded,
-              size: 32,
-              color: Color(0xFF1565C0),
+              size: 36,
+              color: primaryColor,
             ),
           ),
-          const SizedBox(width: 16),
-          const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Book Nest Online Store',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+          const SizedBox(width: 20),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Book Nest Online Store',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-              ),
-              Text(
-                'Selamat datang di aplikasi kami',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.white70,
+                SizedBox(height: 6),
+                Text(
+                  'Selamat datang di aplikasi ini',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.white70,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
@@ -140,17 +170,16 @@ class MenuPage extends StatelessWidget {
     Color color,
     String message,
   ) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
-      height: 80,
       child: ElevatedButton(
         onPressed: () => _showSnackbar(context, message),
         style: ElevatedButton.styleFrom(
           backgroundColor: color,
           foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(vertical: 20),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(20),
           ),
           elevation: 4,
         ),
@@ -158,30 +187,32 @@ class MenuPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(16),
               ),
               child: Icon(
                 icon,
-                size: 28,
+                size: 32,
                 color: Colors.white,
               ),
             ),
-            const SizedBox(width: 16),
-            Text(
-              text,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+            const SizedBox(width: 20),
+            Expanded(
+              child: Text(
+                text,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
               ),
             ),
-            const Spacer(),
             const Icon(
               Icons.arrow_forward_ios_rounded,
               color: Colors.white70,
+              size: 24,
             ),
           ],
         ),
