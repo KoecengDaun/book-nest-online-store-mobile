@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:book_nest_online_store/screens/menu.dart';
 import 'package:book_nest_online_store/screens/add_book_form.dart';
+import 'package:book_nest_online_store/screens/list_product.dart'; // Ganti dengan path yang sesuai
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -123,6 +124,22 @@ class LeftDrawer extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) => const AddBookFormPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 16),
+                  // New Menu Item for Mood Entry
+                  _buildMenuItem(
+                    context: context,
+                    icon: Icons.add_reaction_rounded,
+                    title: 'Daftar Buku',
+                    subtitle: 'Lihat daftar buku',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProductPage(), // Ganti dengan halaman yang sesuai
                         ),
                       );
                     },

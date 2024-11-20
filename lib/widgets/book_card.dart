@@ -1,11 +1,17 @@
+// lib/widgets/book_card.dart
 import 'package:flutter/material.dart';
 import 'package:book_nest_online_store/screens/add_book_form.dart';
+import 'package:book_nest_online_store/screens/list_product.dart';
+import 'package:book_nest_online_store/screens/login.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 class BookItem {
   final String name;
   final IconData icon;
+  final Color color; // Menambahkan properti warna
 
-  BookItem(this.name, this.icon);
+  BookItem(this.name, this.icon, this.color);
 }
 
 class BookCard extends StatelessWidget {
@@ -16,7 +22,7 @@ class BookCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
-    final secondaryColor = Theme.of(context).colorScheme.secondary;
+    final request = context.watch<CookieRequest>();
 
     return Container(
       decoration: BoxDecoration(
@@ -25,13 +31,13 @@ class BookCard extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            secondaryColor,
-            secondaryColor.withBlue(secondaryColor.blue + 20),
+            item.color,
+            item.color.withOpacity(0.8),
           ],
         ),
         boxShadow: [
           BoxShadow(
-            color: secondaryColor.withOpacity(0.3),
+            color: item.color.withOpacity(0.3),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -40,8 +46,8 @@ class BookCard extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () {
-            // Efek ripple yang lebih halus
+          onTap: () async {
+            // Menampilkan Snackbar
             ScaffoldMessenger.of(context)
               ..hideCurrentSnackBar()
               ..showSnackBar(
@@ -82,9 +88,35 @@ class BookCard extends StatelessWidget {
                 ),
               );
             } else if (item.name == "Lihat Daftar Produk") {
-              // Belum Ada
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProductPage(),
+                ),
+              );
             } else if (item.name == "Logout") {
-              Navigator.pop(context);
+              final response = await request.logout(
+                "http://localhost:8000/auth/logout/",
+              );
+              String message = response["message"];
+              if (context.mounted) {
+                if (response['status']) {
+                  String uname = response["username"];
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text("$message Sampai jumpa, $uname."),
+                  ));
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(message),
+                    ),
+                  );
+                }
+              }
             }
           },
           borderRadius: BorderRadius.circular(20),

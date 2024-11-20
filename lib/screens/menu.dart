@@ -1,46 +1,34 @@
+// lib/screens/menu_page.dart
 import 'package:flutter/material.dart';
 import 'package:book_nest_online_store/widgets/left_drawer.dart';
+import 'package:book_nest_online_store/widgets/book_card.dart'; // Import BookCard
 
 class MenuPage extends StatelessWidget {
   const MenuPage({super.key});
-
-  void _showSnackbar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(
-                Icons.info_outline,
-                color: Colors.white,
-                size: 24,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  message,
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ),
-            ],
-          ),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          duration: const Duration(seconds: 2),
-          elevation: 4,
-          margin: const EdgeInsets.all(12),
-        ),
-      );
-  }
 
   @override
   Widget build(BuildContext context) {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final secondaryColor = Theme.of(context).colorScheme.secondary;
+
+    // Daftar menu menggunakan BookItem dengan warna berbeda
+    final List<BookItem> menuItems = [
+      BookItem(
+        "Lihat Daftar Produk",
+        Icons.inventory_2_rounded,
+        Colors.redAccent, // Warna merah
+      ),
+      BookItem(
+        "Tambah Produk",
+        Icons.add_shopping_cart_rounded,
+        Colors.greenAccent, // Warna hijau
+      ),
+      BookItem(
+        "Logout",
+        Icons.logout_rounded,
+        Colors.blueAccent, // Warna biru
+      ),
+    ];
 
     return Scaffold(
       appBar: AppBar(
@@ -66,47 +54,19 @@ class MenuPage extends StatelessWidget {
             children: [
               _buildHeader(primaryColor, secondaryColor),
               Expanded(
-                child: Container(
-                  margin: const EdgeInsets.all(24),
+                child: Padding(
                   padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.95),
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 12,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildMenuButton(
-                        context,
-                        "Lihat Daftar Produk",
-                        Icons.inventory_2_rounded,
-                        const Color(0xFFFF5252),
-                        "Kamu telah menekan tombol Lihat Daftar Produk",
-                      ),
-                      const SizedBox(height: 24),
-                      _buildMenuButton(
-                        context,
-                        "Tambah Produk",
-                        Icons.add_shopping_cart_rounded,
-                        const Color(0xFF4CAF50),
-                        "Kamu telah menekan tombol Tambah Produk",
-                      ),
-                      const SizedBox(height: 24),
-                      _buildMenuButton(
-                        context,
-                        "Logout",
-                        Icons.logout_rounded,
-                        const Color(0xFF2196F3),
-                        "Kamu telah menekan tombol Logout",
-                      ),
-                    ],
+                  child: GridView.builder(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, // Menggunakan 2 kolom
+                      mainAxisSpacing: 24,
+                      crossAxisSpacing: 24,
+                      childAspectRatio: 1, // Menjaga rasio aspek agar kartu persegi
+                    ),
+                    itemCount: menuItems.length,
+                    itemBuilder: (context, index) {
+                      return BookCard(menuItems[index]);
+                    },
                   ),
                 ),
               ),
@@ -159,63 +119,6 @@ class MenuPage extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildMenuButton(
-    BuildContext context,
-    String text,
-    IconData icon,
-    Color color,
-    String message,
-  ) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () => _showSnackbar(context, message),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: color,
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 20),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          elevation: 4,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Icon(
-                icon,
-                size: 32,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(width: 20),
-            Expanded(
-              child: Text(
-                text,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            const Icon(
-              Icons.arrow_forward_ios_rounded,
-              color: Colors.white70,
-              size: 24,
-            ),
-          ],
-        ),
       ),
     );
   }
